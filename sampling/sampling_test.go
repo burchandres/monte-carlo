@@ -28,7 +28,7 @@ func TestUniformFromInterval(t *testing.T) {
 }
 
 func TestNormalSample(t *testing.T) {
-	N := 10000
+	N := 1000
 	m, stdd := 0.0, 1.0
 	samples := make([]float64, 0, N)
 	for i := 0; i < N; i++ {
@@ -36,10 +36,12 @@ func TestNormalSample(t *testing.T) {
 		samples = append(samples, sample)
 	}
 
+	sampleMean := sampleMean(samples)
+	assert.InDelta(t, m, sampleMean, delta)
 	sampleVariance := sampleVariance(samples)
+	assert.InDelta(t, stdd*stdd, sampleVariance, delta)
 	sampleStdd := math.Sqrt(sampleVariance)
 	assert.InDelta(t, stdd, sampleStdd, delta)
-	assert.InDelta(t, stdd*stdd, sampleVariance, delta)
 }
 
 /***********************
@@ -50,9 +52,10 @@ func sampleVariance(samples []float64) float64 {
 	mean := sampleMean(samples)
 	var squaredDifferenceSum float64
 	for _, sample := range samples {
-		squaredDifferenceSum += ((sample - mean)*(sample - mean))
+		distToMean := math.Abs(sample-mean)
+		squaredDifferenceSum += distToMean*distToMean
 	}
-	variance := squaredDifferenceSum/float64((len(samples)))
+	variance := squaredDifferenceSum/float64(len(samples)-1)
 	return variance
 }
 
