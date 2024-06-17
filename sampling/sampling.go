@@ -9,7 +9,7 @@ import (
 const Pi = math.Pi
 
 // Returns uniformly sampled float in the half open interval [a,b)
-func UniformFromInterval(a, b float64) float64 {
+func Uniform(a, b float64) float64 {
 	// use bijection f(x) = a + x(b-a)
 	u := rand.Float64()
 	dist := math.Abs(b-a)
@@ -19,11 +19,11 @@ func UniformFromInterval(a, b float64) float64 {
 
 // Returns point sampled from Normal distribution with
 // mean = m and standard deviation = stdd
-func NormalSample(m, stdd float64) float64 {
+func Gaussian(m, stdd float64) float64 {
 	// Uses Box-Muller transformation
 	u := rand.Float64()
 	v := rand.Float64()
-	sample := stdd*math.Sqrt(u)*math.Cos(v*2*Pi) + m
+	sample := stdd*math.Sqrt(-2.0*math.Log(u))*math.Cos(v*2*Pi) + m
 	return sample
 }
 
@@ -33,7 +33,7 @@ func NormalSample(m, stdd float64) float64 {
 func UniformFromNSphere(N int) linalg.Vector {
 	sample := make([]float64, 0, N)
 	for i := 0; i < N; i++ {
-		u := NormalSample(0,1)
+		u := Gaussian(0,1)
 		sample = append(sample, u)
 	}
 	vector := linalg.Vector{Dim: N, Point: sample}
@@ -56,10 +56,10 @@ func UniformFromNBall(N int) linalg.Vector {
 
 // Returns point sampled from normal distribution 
 // with mean = m and standard deviation = stdd in R^N
-func NNormalSample(m, stdd float64, N int) linalg.Vector {
+func GaussianN(m, stdd float64, N int) linalg.Vector {
 	sample := make([]float64, 0, N)
 	for i := 0; i < N; i++ {
-		sample = append(sample, NormalSample(m, stdd))
+		sample = append(sample, Gaussian(m, stdd))
 	}
 	sampleVector := linalg.Vector{Dim: N, Point: sample}
 	return sampleVector

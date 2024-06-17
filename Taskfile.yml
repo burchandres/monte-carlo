@@ -1,0 +1,15 @@
+version: '3'
+
+tasks:
+  test-clear-cache:
+    desc: Clears go test cache
+    aliases: 
+      - clear-cache
+    cmds:
+      - go clean -testcache
+
+  test:
+    desc: Runs all unit and integration tests
+    cmds:
+      - task: clear-cache
+      - go test ./...
