@@ -1,0 +1,22 @@
+version: '3'
+
+tasks:
+  clear-test-cache:
+    desc: Clears go test cache
+    aliases: 
+      - clear-cache
+    cmds:
+      - go clean -testcache
+
+  test:
+    desc: Runs all unit and integration tests
+    cmds:
+      - task: clear-cache
+      - go test ./...
+
+  tidy:
+    desc: Runs linting and checks for vulnerabilities
+    cmds:
+      - golangci-lint run
+      - go fmt ./...
+      - go vet ./...
