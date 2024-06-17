@@ -34,7 +34,7 @@ func Gaussian(m, stdd float64) float64 {
 func UniformFromNSphere(N int) linalg.Vector {
 	sample := make([]float64, 0, N)
 	for i := 0; i < N; i++ {
-		u := Gaussian(0, 1)
+		u := Gaussian(0.0, 1.0)
 		sample = append(sample, u)
 	}
 	vector := linalg.Vector{Dim: N, Point: sample}
