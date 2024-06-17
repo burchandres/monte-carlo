@@ -12,7 +12,7 @@ const Pi = math.Pi
 func Uniform(a, b float64) float64 {
 	// use bijection f(x) = a + x(b-a)
 	u := rand.Float64()
-	dist := math.Abs(b-a)
+	dist := math.Abs(b - a)
 	y := a + u*(dist)
 	return y
 }
@@ -29,11 +29,12 @@ func Gaussian(m, stdd float64) float64 {
 
 // Returns uniformly sampled vector along the circumference of the N-Sphere
 // where an N-Sphere is defined by the set
-//						{v \in R^N | |v| = 1}	
+//
+//	{v \in R^N | |v| = 1}
 func UniformFromNSphere(N int) linalg.Vector {
 	sample := make([]float64, 0, N)
 	for i := 0; i < N; i++ {
-		u := Gaussian(0,1)
+		u := Gaussian(0, 1)
 		sample = append(sample, u)
 	}
 	vector := linalg.Vector{Dim: N, Point: sample}
@@ -47,14 +48,15 @@ func UniformFromNSphere(N int) linalg.Vector {
 
 // Returns uniformly sampled float from within the N-Ball
 // where an N-Ball is defined by the set
-//						{v \in R^N | |v| < 1}
+//
+//	{v \in R^N | |v| < 1}
 func UniformFromNBall(N int) linalg.Vector {
 	sample := UniformFromNSphere(N)
 	d := rand.Float64()
 	return linalg.ScalarMult(sample, math.Pow(d, 1.0/float64(N)))
 }
 
-// Returns point sampled from normal distribution 
+// Returns point sampled from normal distribution
 // with mean = m and standard deviation = stdd in R^N
 func GaussianN(m, stdd float64, N int) linalg.Vector {
 	sample := make([]float64, 0, N)

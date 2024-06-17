@@ -1,9 +1,9 @@
 package sampling
 
 import (
-	"testing"
-	"math/rand/v2"
 	"math"
+	"math/rand/v2"
+	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -16,11 +16,11 @@ func TestUniformFromInterval(t *testing.T) {
 		var b = rand.Float64()
 		var sample float64
 		if a > b {
-			sample = Uniform(b,a)
+			sample = Uniform(b, a)
 			assert.GreaterOrEqual(t, sample, b)
 			assert.LessOrEqual(t, sample, a)
 		} else {
-			sample = Uniform(a,b)
+			sample = Uniform(a, b)
 			assert.GreaterOrEqual(t, sample, a)
 			assert.LessOrEqual(t, sample, b)
 		}
@@ -52,10 +52,10 @@ func sampleVariance(samples []float64) float64 {
 	mean := sampleMean(samples)
 	var squaredDifferenceSum float64
 	for _, sample := range samples {
-		distToMean := math.Abs(sample-mean)
-		squaredDifferenceSum += distToMean*distToMean
+		distToMean := math.Abs(sample - mean)
+		squaredDifferenceSum += distToMean * distToMean
 	}
-	variance := squaredDifferenceSum/float64(len(samples)-1)
+	variance := squaredDifferenceSum / float64(len(samples)-1)
 	return variance
 }
 
@@ -64,6 +64,6 @@ func sampleMean(samples []float64) float64 {
 	for _, sample := range samples {
 		totalSum += sample
 	}
-	mean := totalSum/float64(len(samples))
+	mean := totalSum / float64(len(samples))
 	return mean
 }

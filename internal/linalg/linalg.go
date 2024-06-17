@@ -1,16 +1,16 @@
 package linalg
 
 import (
-	"math"
 	"errors"
+	"math"
 )
 
 const epsilon = 1e-6
 
 // Uses margin of error = 1e-6
-func equal(x,y float64) bool {
-	dist := math.Abs(x-y)
-	return dist <= epsilon 
+func equal(x, y float64) bool {
+	dist := math.Abs(x - y)
+	return dist <= epsilon
 }
 
 // Returns v*a
@@ -36,11 +36,10 @@ func ZeroVector(N int) Vector {
 	return Vector{Dim: N, Point: point}
 }
 
-
 type Vector struct {
-	Dim int // dimension of R Vector is in
-	Point []float64 // array representing vector in R^Dim space
-	length float64 // it is ||Point||
+	Dim              int       // dimension of R Vector is in
+	Point            []float64 // array representing vector in R^Dim space
+	length           float64   // it is ||Point||
 	calculatedLength bool
 }
 
@@ -60,13 +59,13 @@ func (v Vector) Len() float64 {
 	} else if v.calculatedLength {
 		return v.length
 	}
-	
-	var squaredSum float64 
+
+	var squaredSum float64
 	for _, vi := range v.Point {
-		squaredSum += vi*vi
+		squaredSum += vi * vi
 	}
 	len := math.Sqrt(squaredSum)
 	v.calculatedLength = true
 	v.length = len
 	return len
-} 
+}
