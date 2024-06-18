@@ -20,3 +20,9 @@ tasks:
       - golangci-lint run
       - go fmt ./...
       - go vet ./...
+
+  nag:
+    desc: Runs test and tidy
+    cmds:
+      - task: tidy
+      - task: test
