@@ -43,7 +43,7 @@ def solve_tsp_simulated_annealing(cities: np.ndarray) -> Tuple[np.ndarray, float
         cur_dist, tmp_dist = total_dist(cur_path), total_dist(new_path)
 
         new_path_prob = np.exp((cur_dist - tmp_dist)/t)
-        # using probability of path ~= e^(-C(tour)/t)
+        # using probability of path ~= e^(-C(tour)/t) -- the lower the cost the higher the probability
         if 1 <= new_path_prob:
             cur_path = new_path
         else:
