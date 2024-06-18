@@ -1,7 +1,7 @@
 import numpy as np
 import itertools
 from logging import getLogger
-from typing import List, Tuple
+from typing import Tuple
 
 
 logger = getLogger(__name__)
