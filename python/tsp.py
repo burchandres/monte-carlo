@@ -1,10 +1,11 @@
 import numpy as np
 import itertools
-from logging import getLogger
+import logging
+
 from typing import Tuple
 
 
-logger = getLogger(__name__)
+logger = logging.getLogger(__name__)
 rng = np.random.default_rng()
 
 # Use of simulated annealing to produce a near optimal solution for the travelling sales person problem
@@ -16,7 +17,8 @@ def solve_tsp_brute_force(cities: np.ndarray) -> Tuple[np.ndarray, float]:
     :returns: path and length of path
     """
     # go through all permutations and get one with lowest distance
-    all_paths = itertools.permutations(cities, len(cities))
+    permutations = itertools.permutations(cities)
+    all_paths = [[city for city in permutation] for permutation in permutations]
     all_dists = []
     for path in all_paths:
         path_dist = total_dist(np.array(path))
@@ -40,9 +42,9 @@ def solve_tsp_simulated_annealing(cities: np.ndarray) -> Tuple[np.ndarray, float
         i,j = rng.choice(range(path_len), size=2, replace=False)
         new_path = cur_path.copy()
         new_path[i], new_path[j] = new_path[j], new_path[i]
-        cur_dist, tmp_dist = total_dist(cur_path), total_dist(new_path)
+        cur_dist, new_dist = total_dist(cur_path), total_dist(new_path)
 
-        new_path_prob = np.exp((cur_dist - tmp_dist)/t)
+        new_path_prob = np.exp((cur_dist - new_dist)/t)
         # using probability of path ~= e^(-C(tour)/t) -- the lower the cost the higher the probability
         if 1 <= new_path_prob:
             cur_path = new_path
@@ -53,18 +55,26 @@ def solve_tsp_simulated_annealing(cities: np.ndarray) -> Tuple[np.ndarray, float
     return cur_path, total_dist(cur_path)
 
 def total_dist(path: np.ndarray) -> float:
-    return sum([np.linalg.norm([path[i], path[i+1]]) for i in range(len(path)-1)])
+    cycle = np.append(path, path[0])
+    total_dist = 0
+    for a,b in itertools.pairwise(cycle):
+        dist = np.linalg.norm(a-b)
+        total_dist += dist
+    return total_dist
 
 def main(cities_num: int):
-    distance_differences = np.zeros(cities_num)
-    for i in range(20):
+    N = 20
+    distance_differences = []
+    for i in range(N):
         cities = rng.uniform(size=(cities_num, 2))
         _, bf_dist = solve_tsp_brute_force(cities)
         _, tsp_dist = solve_tsp_simulated_annealing(cities)
-        logger.info(f"brute force path distance {bf_dist} vs tsp path distance {tsp_dist}")
-        distance_differences[i] = np.abs(bf_dist - tsp_dist)
-    avg_difference = sum(distance_differences)/cities_num
-    logger.info(f"avg difference between brute force and tsp path was {avg_difference}")
+        # logger.info(f"brute force path distance {bf_dist} vs tsp path distance {tsp_dist}")
+        print(f"brute force path distance {bf_dist} vs tsp path distance {tsp_dist}")
+        distance_differences.append(abs(bf_dist - tsp_dist))
+    avg_difference = sum(distance_differences)/len(distance_differences)
+    # logger.info(f"avg difference between brute force and tsp path was {avg_difference}")
+    print(f"avg difference between brute force and tsp path was {avg_difference}")
 
 if __name__ == '__main__':
-    main(cities_num=10)
+    main(cities_num=5)
